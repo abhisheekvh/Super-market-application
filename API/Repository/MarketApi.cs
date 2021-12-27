@@ -23,6 +23,25 @@ namespace API.Repository
             return result.Entity;
         }
 
+        public async Task<bool> Delete(int id)
+        {
+            try
+            {
+                var DeletedProd = await _appDbContext.categories.FirstOrDefaultAsync(x => x.CategoryId == id);
+                if (DeletedProd != null)
+                {
+                    _appDbContext.categories.Remove(DeletedProd);
+                    await _appDbContext.SaveChangesAsync();
+                    return true;
+                }
+                else
+                    return false;
+            }catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<List<Category>> GetCategories()
         {
             try

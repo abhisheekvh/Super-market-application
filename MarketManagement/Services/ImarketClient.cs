@@ -12,5 +12,6 @@ namespace MarketManagement.Services
         Task<Category> AddCategory(Category category);
         Task<Category> GetCategoryById(int categoryId);
         Task<Category> UpdateCategory(Category category);
+        Task<bool> Delete(int id);
     }
 }

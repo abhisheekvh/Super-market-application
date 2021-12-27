@@ -71,6 +71,21 @@ namespace API.Controllers
                 return BadRequest("Something went wromg");
             }
         }
+        [HttpDelete("{id}")]
+        public async Task<bool> DeleteProduct(int id)
+        {
+            try
+            {
+                bool res = await _imarketApi.Delete(id);
+                if (res)
+                    return true;
+                return false;
+
+            }catch(Exception ex)
+            {
+                return false;
+            }
+        }
 
     }
 }

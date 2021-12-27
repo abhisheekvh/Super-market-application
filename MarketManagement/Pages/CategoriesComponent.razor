@@ -31,8 +31,10 @@
                     @catgory.Description
                 </td>
                 <td>
-                    <a href="@($"addcategory/{catgory.CategoryId}")" class="btn btn-primary btn-sm m-1">Edit</a>
+                    <a href="@($"addcategory/{catgory.CategoryId}")" class="btn btn-link btn-sm m-1">Edit</a>
+                    <button @onclick="()=>Delete(catgory.CategoryId)" class="btn btn-link btn-sm m-1">Delete</button>
                 </td>
+                
 
             </tr>
             }
@@ -46,14 +48,29 @@
 
     public List<Category> lstCategory;
 
-    protected override async Task OnInitializedAsync()
+    private async Task Load()
     {
         lstCategory = new List<Category>();
         lstCategory = await imarketClient.GetCategories();
     }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Load();
+    }
     private void navigatetoaddcategory()
     {
         navigation.NavigateTo("/addcategory");
+    }
+    private async void Delete(int id)
+    {
+        bool res= await imarketClient.Delete(id);
+        if (res)
+            await Load();
+
+
+
+
     }
 
 }

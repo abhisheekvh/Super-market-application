@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MarketManagement.ServiceImplementation
 {
@@ -21,6 +22,14 @@ namespace MarketManagement.ServiceImplementation
             var AddCat=await _httpclient.PostAsJsonAsync("api/Market", category);
             var result =await AddCat.Content.ReadFromJsonAsync<Category>();
             return result;
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+           var  res= await _httpclient.DeleteAsync("api/Market/" + id);
+            var response = await res.Content.ReadAsStringAsync();
+            return JsonConvert.DeserializeObject<bool>(response); //converted http response to bool
+
         }
 
         public async Task<List<Category>> GetCategories()
