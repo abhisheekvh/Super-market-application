@@ -14,6 +14,7 @@ namespace API.DataConnection
 
         }
         public DbSet<Category> categories { get; set; }
+        public DbSet<Product> products { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -30,6 +31,26 @@ namespace API.DataConnection
                     name = "MacBook",
                     Description = "Mac OS"
                 }
+                );
+            modelBuilder.Entity<Product>().HasData(
+                new Product
+                {
+                    ProductId = 1,
+                    CategoryId =1,
+                    name =" Dell",
+                    Quantity=5000,
+                    price=4567654
+                },
+                new Product
+                {
+                    ProductId = 2,
+                    CategoryId = 2,
+                    name = "MacBook",
+                    Quantity = 1000,
+                    price =984453
+                }
+
+
                 );
         }
     }

@@ -1,0 +1,65 @@
+﻿@page "/products"
+@inject IMarketProductClient imarket
+<h3>List of Products</h3>
+<hr />
+
+<div class="container">
+    @if(lstProducts!=null && lstProducts.Count>0)
+            {
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Product Category
+                            </th>
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                Product Quantity
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var prod in lstProducts)
+                        {
+                        <tr>
+                            <td>
+                                @prod.CategoryId
+
+                            </td>
+                            <td>
+                                @prod.name
+
+                            </td>
+                            <td>
+                                @prod.Quantity
+
+                            </td>
+                            <td>
+                                @prod.price
+
+                            </td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+
+</div>
+
+@code {
+
+    public List<Product> lstProducts { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        lstProducts = await imarket.Getproducts();
+
+    }
+
+}

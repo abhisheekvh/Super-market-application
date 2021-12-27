@@ -16,10 +16,12 @@ namespace API.Controllers
     public class MarketController : ControllerBase
     {
          IMarketApi _imarketApi;
+        IMarketProducts _imarketProducts;
         public List<Category> lstCategory { get; set; } = new List<Category>();
-        public MarketController(IMarketApi imarketApi)
+        public MarketController(IMarketApi imarketApi,IMarketProducts imarketProducts)
         {
             _imarketApi = imarketApi;
+            _imarketProducts = imarketProducts;
         }
         [HttpGet]
         public async Task<ActionResult<List<Category>>> GetCategories()
@@ -72,6 +74,7 @@ namespace API.Controllers
             }
         }
         [HttpDelete("{id}")]
+
         public async Task<bool> DeleteProduct(int id)
         {
             try
@@ -84,6 +87,22 @@ namespace API.Controllers
             }catch(Exception ex)
             {
                 return false;
+            }
+        }
+        //Getting product lists
+        [HttpGet("products")]
+        public async Task<ActionResult<List<Product>>> GetProducts()
+        {
+            try
+            {
+                var lstProducts = await _imarketProducts.GetProducts();
+                if (lstProducts != null && lstProducts.Count > 0)
+                    return Ok(lstProducts);
+                return NotFound("Not Found");
+
+            }catch(Exception ex)
+            {
+                return BadRequest("Something went wrong please try again later");
             }
         }
 

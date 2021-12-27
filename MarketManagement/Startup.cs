@@ -38,6 +38,10 @@ namespace MarketManagement
             {
                 client.BaseAddress = new Uri("http://localhost:10721/");
             });
+            services.AddHttpClient<IMarketProductClient, MarketProductClient>(client =>
+            {
+                client.BaseAddress = new Uri("http://localhost:10721/");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
