@@ -1,0 +1,90 @@
+﻿@page "/addcategory/{id}"
+@page "/addcategory"
+@inject ImarketClient imarketclient
+@inject NavigationManager navigation
+
+<div class="container">
+    @if (updateCategory != null)
+    {
+    <EditForm Model="@updateCategory" OnValidSubmit="addcategory">
+
+        
+     
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" @bind-value="updateCategory.name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter name">
+            </div>
+            <div class="form-group">
+                <label for="description">Password</label>
+                <input type="text" @bind-value="updateCategory.Description" class="form-control" id="description" placeholder="Enter Description">
+            </div>
+            @if (flag == false)
+            {
+            <button type="submit" class="btn btn-primary btn-sm">Submit</button>
+            }
+            else
+                {
+            <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                }
+
+    </EditForm>
+    }
+</div>
+
+@code {
+
+    public bool flag;
+    public Category category { get; set; } = new Category();
+    public UpdateCategory updateCategory { get; set; } = new UpdateCategory();
+
+    [Parameter]
+
+    public string id { get; set; }
+    [Inject]
+    public IMapper mapper { get; set; }
+
+    private async Task  addcategory()
+    {
+        mapper.Map(updateCategory,category);
+        Category upd = null;
+
+        if (category.CategoryId != 0)
+        {
+            upd = await imarketclient.UpdateCategory(category);
+            mapper.Map(upd, updateCategory);
+            navigation.NavigateTo("/categories");
+        }
+        else
+        {
+
+            var res = await imarketclient.AddCategory(category);
+            if (res != null)
+            {
+                navigation.NavigateTo("/categories");
+            }
+        }
+
+    }
+    protected async override Task OnParametersSetAsync()
+    {
+        try
+        {
+            int.TryParse(id, out int categoryId);
+            if (categoryId != 0)
+            {
+                flag = true;
+                category = await imarketclient.GetCategoryById(int.Parse(id));
+
+
+                mapper.Map(category, updateCategory);
+            }
+            else
+                flag = false;
+
+        }catch(Exception ex)
+        {
+
+        }
+    }
+
+}

@@ -1,0 +1,59 @@
+﻿@page "/categories"
+@inject ImarketClient imarketClient
+@inject NavigationManager navigation
+
+<div class="container">
+    <h3>List of Categories</h3>
+    @if (lstCategory != null && lstCategory.Count > 0)
+    {
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+               <th>
+                   Description
+               </th>
+                <th>
+                    Actions
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var catgory in lstCategory)
+            {
+            <tr>
+                <td>
+                    @catgory.name
+                </td>
+                <td>
+                    @catgory.Description
+                </td>
+                <td>
+                    <a href="@($"addcategory/{catgory.CategoryId}")" class="btn btn-primary btn-sm m-1">Edit</a>
+                </td>
+
+            </tr>
+            }
+        </tbody>
+    </table>
+    <button type="button" class="btn btn-info btn-sm" @onclick="navigatetoaddcategory">Add Categories</button>
+    }
+</div>
+
+@code {
+
+    public List<Category> lstCategory;
+
+    protected override async Task OnInitializedAsync()
+    {
+        lstCategory = new List<Category>();
+        lstCategory = await imarketClient.GetCategories();
+    }
+    private void navigatetoaddcategory()
+    {
+        navigation.NavigateTo("/addcategory");
+    }
+
+}
