@@ -13,7 +13,11 @@ namespace MarketManagement.MapperClasses
         {
             CreateMap<UpdateCategory, Category>();
             CreateMap<Category, UpdateCategory>();
+
+            CreateMap<UpdateProduct, Product>();
+            CreateMap<Product, UpdateProduct>();
                
         }
+       
     }
 }

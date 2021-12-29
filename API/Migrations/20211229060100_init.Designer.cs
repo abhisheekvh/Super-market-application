@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20211227102610_ProductAdded")]
-    partial class ProductAdded
+    [Migration("20211229060100_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -36,7 +36,7 @@ namespace API.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("categories");
+                    b.ToTable("categoriesTable");
 
                     b.HasData(
                         new
@@ -75,7 +75,9 @@ namespace API.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("Product");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("productsTable");
 
                     b.HasData(
                         new
@@ -94,6 +96,17 @@ namespace API.Migrations
                             name = "MacBook",
                             price = 984453.0
                         });
+                });
+
+            modelBuilder.Entity("SharedClasses.Product", b =>
+                {
+                    b.HasOne("SharedClasses.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }

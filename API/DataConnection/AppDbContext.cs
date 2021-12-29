@@ -13,11 +13,13 @@ namespace API.DataConnection
         {
 
         }
-        public DbSet<Category> categories { get; set; }
-        public DbSet<Product> products { get; set; }
+        public DbSet<Category> categoriesTable { get; set; }
+        public DbSet<Product> productsTable { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
             base.OnModelCreating(modelBuilder);
+            
             modelBuilder.Entity<Category>().HasData(
                 new Category
                 {

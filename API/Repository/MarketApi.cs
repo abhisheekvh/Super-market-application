@@ -18,7 +18,7 @@ namespace API.Repository
         }
         public async Task<Category> AddCategory(Category category)
         {
-            var result = await _appDbContext.categories.AddAsync(category);
+            var result = await _appDbContext.categoriesTable.AddAsync(category);
             await _appDbContext.SaveChangesAsync();
             return result.Entity;
         }
@@ -27,10 +27,10 @@ namespace API.Repository
         {
             try
             {
-                var DeletedProd = await _appDbContext.categories.FirstOrDefaultAsync(x => x.CategoryId == id);
+                var DeletedProd = await _appDbContext.categoriesTable.FirstOrDefaultAsync(x => x.CategoryId == id);
                 if (DeletedProd != null)
                 {
-                    _appDbContext.categories.Remove(DeletedProd);
+                    _appDbContext.categoriesTable.Remove(DeletedProd);
                     await _appDbContext.SaveChangesAsync();
                     return true;
                 }
@@ -46,7 +46,11 @@ namespace API.Repository
         {
             try
             {
-                return await _appDbContext.categories.ToListAsync();
+                var lstRes= await _appDbContext.categoriesTable.ToListAsync();
+                if (lstRes != null && lstRes.Count > 0)
+                    return lstRes;
+                else
+                    return null;
             }catch(Exception ex)
             {
                 return null;
@@ -57,7 +61,7 @@ namespace API.Repository
         {
             try
             {
-                var category = await _appDbContext.categories.FirstOrDefaultAsync(x => x.CategoryId == id);
+                var category = await _appDbContext.categoriesTable.FirstOrDefaultAsync(x => x.CategoryId == id);
                 if (category != null)
                     return category;
                 else
@@ -75,7 +79,7 @@ namespace API.Repository
         {
             try
             {
-                var categoryDetails = await _appDbContext.categories.FirstOrDefaultAsync(x => x.CategoryId == category.CategoryId);
+                var categoryDetails = await _appDbContext.categoriesTable.FirstOrDefaultAsync(x => x.CategoryId == category.CategoryId);
                 if(categoryDetails!=null)
                 {
                     categoryDetails.name = category.name;
@@ -93,7 +97,16 @@ namespace API.Repository
                 return null;
             }
         }
-
         
+
+        public Task<List<Product>> GetProducts()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> AddProducts()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

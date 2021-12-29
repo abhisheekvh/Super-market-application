@@ -1,64 +1,90 @@
 ﻿@page "/products"
 @inject IMarketProductClient imarket
+@inject NavigationManager navigate
 <h3>List of Products</h3>
 <hr />
 
 <div class="container">
-    @if(lstProducts!=null && lstProducts.Count>0)
-            {
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>
-                                Product Category
-                            </th>
-                            <th>
-                                Product Name
-                            </th>
-                            <th>
-                                Product Quantity
-                            </th>
-                            <th>
-                                Price
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var prod in lstProducts)
-                        {
-                        <tr>
-                            <td>
-                                @prod.CategoryId
+    @if (lstProducts != null && lstProducts.Count > 0)
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Product Category
+                    </th>
+                    <th>
+                        Product Name
+                    </th>
+                    <th>
+                        Product Quantity
+                    </th>
+                    <th>
+                        Price
+                    </th>
+                    <th>
+                        Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var prod in lstProducts)
+                {
+                    <tr>
+                        <td>
+                            @prod.CategoryId
 
-                            </td>
-                            <td>
-                                @prod.name
+                        </td>
+                        <td>
+                            @prod.name
 
-                            </td>
-                            <td>
-                                @prod.Quantity
+                        </td>
+                        <td>
+                            @prod.Quantity
 
-                            </td>
-                            <td>
-                                @prod.price
+                        </td>
+                        <td>
+                            @prod.price
 
-                            </td>
+                        </td>
+                        <td>
+                            <a href="@($"addproducts/{@prod.ProductId}")" class="btn btn-link  m-1">Edit</a>
+                            <button type="submit" @onclick="()=>DeleteProd(prod.ProductId)" class="btn btn-link  m-1">Delete</button>
+                        </td>
 
-                        </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <button class="btn btn-primary btn-sm m-2" @onclick="GotoAddproduct">Add Product</button>
+
 
 </div>
 
 @code {
 
     public List<Product> lstProducts { get; set; }
+    private async Task Load()
+    {
+        lstProducts = await imarket.Getproducts();
+
+    }
 
     protected async override Task OnInitializedAsync()
     {
-        lstProducts = await imarket.Getproducts();
+        await Load();
+    }
+    private void GotoAddproduct()
+    {
+        navigate.NavigateTo("/addproducts");
+    }
+    private async Task DeleteProd(int id)
+    {
+        if(await imarket.DeleteProd(id))
+        {
+            await Load();
+        }
 
     }
 

@@ -1,0 +1,135 @@
+﻿@page "/addproducts"
+@page "/addproducts/{id}"
+@inject IMarketProductClient imarketproductClient
+@inject ImarketClient imarketClient
+@inject NavigationManager navigate
+
+
+<div class="container">
+    @if (updateProducts != null)
+    {
+    <EditForm Model="@updateProducts" OnValidSubmit="Handle">
+
+
+
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" @bind-value="updateProducts.name" class="form-control" id="name" aria-describedby="emailHelp" placeholder="Enter name">
+        </div>
+        <div class="form-group">
+            <label for="description">Category</label>
+            <CustomInputSelect @bind-Value="@updateProducts.CategoryId" class="form-control">
+                @foreach (var cat in lstCategories)
+                    {
+                    <option value="@cat.CategoryId">@cat.name</option>
+                    }
+            </CustomInputSelect>
+        </div>
+        <div class="form-group">
+            <label for="quan">Quantity</label>
+            <input type="text" @bind-value="updateProducts.Quantity" class="form-control" id="quan" placeholder="Enter Quantity">
+        </div>
+        <div class="form-group">
+            <label for="proce">Price</label>
+            <input type="text" @bind-value="updateProducts.price" class="form-control" id="price" placeholder="Enter Price">
+        </div>
+        @if (!flag)
+        {
+            <button class="btn btn-primary btn-sm m-1" type="submit"> Add Products</button>
+            <button type="button" class="btn btn-outline-info btn-sm m-1" @onclick="back">Go Back</button>
+        }
+        else
+        {
+            <button class="btn btn-primary btn-sm m-1" type="submit"> Update Products</button>
+            <button type="button" class="btn btn-outline-info btn-sm m-1" @onclick="back">Go Back</button>
+        }
+
+    </EditForm>
+    }
+    
+</div>
+
+@code {  
+
+    public Product product { get; set; } = new Product();
+    public UpdateProduct updateProducts { get; set; } = new UpdateProduct();
+    public List<Category> lstCategories { get; set; } = new List<Category>();
+
+    [Parameter]
+    public string id { get; set; }
+
+    [Inject]
+    public IMapper mapper { get; set; }
+    public bool flag = false;
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            int.TryParse(id, out int productid);
+            if (productid != 0)
+            {
+
+                product = await imarketproductClient.GetProductByid(int.Parse(id));
+                flag = true ;
+
+
+            }
+            else
+            {
+                flag = false;
+            }
+            lstCategories = (await imarketClient.GetCategories()).ToList();
+            if (lstCategories != null && lstCategories.Count > 0)
+            {
+                mapper.Map(product, updateProducts);
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+
+
+
+
+
+
+    }
+    private async Task Handle()
+    {
+        try
+        {
+            mapper.Map(updateProducts, product);
+            Product prod = null;
+            if (product.ProductId != 0)
+            {
+                prod = await imarketproductClient.Updateproducts(product);
+                mapper.Map(prod, updateProducts);
+                navigate.NavigateTo("/products");
+
+
+            }
+            else
+            {
+                bool result = await imarketproductClient.AddProducts(product);
+                if (result)
+                {
+                    navigate.NavigateTo("/products");
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+            throw;
+        }
+
+    }
+    private void back()
+    {
+        navigate.NavigateTo("/products");
+    }
+
+}

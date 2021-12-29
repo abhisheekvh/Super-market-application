@@ -23,16 +23,24 @@ namespace API.Controllers
             _imarketApi = imarketApi;
             _imarketProducts = imarketProducts;
         }
-        [HttpGet]
+        [HttpGet("getallcategories")]
         public async Task<ActionResult<List<Category>>> GetCategories()
         {
-           lstCategory= await  _imarketApi.GetCategories();
-            if (lstCategory != null && lstCategory.Count > 0)
+            try
             {
-                return Ok(lstCategory);
+                lstCategory = await _imarketApi.GetCategories();
+                if (lstCategory != null && lstCategory.Count > 0)
+                {
+                    return Ok(lstCategory);
+                }
+                else
+                    return NotFound("Not found");
             }
-            else
-                return NotFound("Categories not found!");
+            catch (Exception ex)
+            {
+
+                return null;
+            }
         }
         [HttpPost]
         public async Task<ActionResult<Category>> AddCategory(Category category)
@@ -105,6 +113,75 @@ namespace API.Controllers
                 return BadRequest("Something went wrong please try again later");
             }
         }
+        [HttpPost("addproducts")]
+        public async Task<bool> Addproducts(Product product)
+        {
+            bool flag = false;
+            try
+            {
+                bool res = await _imarketProducts.AddProducts(product);
+                if (res)
+                    return flag = true;
+                return flag;
+            }
+            catch(Exception ex)
+            {
+                return flag;
+            }
+        }
+       [HttpPut("updateproducts")]
+       public async Task<ActionResult<Product>> UpdateProduct(Product product)
+        {
+            try
+            {
+                var updatedProduct = await _imarketProducts.UpdateProduct(product);
+                if (updatedProduct != null)
+                    return Ok(updatedProduct);
+                else
+                    return NotFound("Not found!");
+
+
+            }catch(Exception ex)
+            {
+                return BadRequest("Something went wrong please try again later!");
+            }
+        }
+       
+        [HttpGet("getprodbyid/{id}")]
+        
+        public async Task<ActionResult<Product>> GetProductsByid(int id)
+        {
+            try
+            {
+                var productData = await _imarketProducts.GetproductByid(id);
+                if(productData != null)
+                {
+                    return Ok(productData);
+                }
+                else
+                {
+                    return Ok("Not found!");
+                }
+
+            }catch(Exception ex)
+            {
+                return BadRequest("Something went wrong please try again later!");
+            }
+        }
+        [HttpDelete("deleteprod/{id}")]
+        public async Task<bool> DeleteProd(int id)
+        {
+            try
+            {
+                bool result = await _imarketProducts.DeleteProd(id);
+                return result;
+
+            }catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
 
     }
 }

@@ -26,15 +26,35 @@ namespace MarketManagement.ServiceImplementation
 
         public async Task<bool> Delete(int id)
         {
-           var  res= await _httpclient.DeleteAsync("api/Market/" + id);
-            var response = await res.Content.ReadAsStringAsync();
-            return JsonConvert.DeserializeObject<bool>(response); //converted http response to bool
+            try
+            {
+                var res = await _httpclient.DeleteAsync("api/Market/" + id);
+                var response = await res.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<bool>(response);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }//converted http response to bool
 
         }
 
         public async Task<List<Category>> GetCategories()
         {
-            return await _httpclient.GetFromJsonAsync<List<Category>>("api/Market"); 
+            try
+            {
+                var res = await _httpclient.GetFromJsonAsync<List<Category>>("api/Market/getallcategories");
+                if (res != null)
+                    return res;
+                else
+                    return null;
+            }
+            catch (Exception ex)
+            {
+
+                return null;
+            }
         }
 
         public async Task<Category> GetCategoryById(int categoryId)

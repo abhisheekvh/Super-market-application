@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SharedClasses\SharedClasses.csproj" />
+    <ProjectReference Include="..\Validation.Component\Validation.Component.csproj" />
   </ItemGroup>
 
 </Project>

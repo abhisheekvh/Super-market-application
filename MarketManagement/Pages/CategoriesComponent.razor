@@ -31,8 +31,8 @@
                     @catgory.Description
                 </td>
                 <td>
-                    <a href="@($"addcategory/{catgory.CategoryId}")" class="btn btn-link btn-sm m-1">Edit</a>
-                    <button @onclick="()=>Delete(catgory.CategoryId)" class="btn btn-link btn-sm m-1">Delete</button>
+                    <a href="@($"addcategory/{catgory.CategoryId}")" class="btn btn-link  m-1">Edit</a>
+                    <button @onclick="()=>Delete(catgory.CategoryId)" class="btn btn-link m-1">Delete</button>
                 </td>
                 
 
@@ -40,8 +40,9 @@
             }
         </tbody>
     </table>
-    <button type="button" class="btn btn-info btn-sm" @onclick="navigatetoaddcategory">Add Categories</button>
     }
+    <button type="button" class="btn btn-info btn-sm" @onclick="navigatetoaddcategory">Add Categories</button>
+   
 </div>
 
 @code {

@@ -34,7 +34,7 @@ namespace API.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("categories");
+                    b.ToTable("categoriesTable");
 
                     b.HasData(
                         new
@@ -73,7 +73,9 @@ namespace API.Migrations
 
                     b.HasKey("ProductId");
 
-                    b.ToTable("products");
+                    b.HasIndex("CategoryId");
+
+                    b.ToTable("productsTable");
 
                     b.HasData(
                         new
@@ -92,6 +94,17 @@ namespace API.Migrations
                             name = "MacBook",
                             price = 984453.0
                         });
+                });
+
+            modelBuilder.Entity("SharedClasses.Product", b =>
+                {
+                    b.HasOne("SharedClasses.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 #pragma warning restore 612, 618
         }
